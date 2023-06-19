@@ -1,7 +1,7 @@
 {
   "name": "version-talley-tracker",
-  "version": "0.0.0",
-  "description": "Used to easily track semantic versioning by bumping the versioning using entering (B)reaking change, (F)eature, or (B)ug fix. Use this to get an idea of untracked versioning.",
+  "version": "0.1.0",
+  "description": "Used to easily track semantic versioning by bumping the versioning using entering (M)ajor breaking change, (F)eature, or (B)ug fix. Use this to get an idea of untracked versioning.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
