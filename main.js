@@ -5,11 +5,23 @@ let feat = 0
 let fix = 0
 
 function outputVersion() {
-    console.log("Current version: " + mbc + "." + feat + "." + fix);
+    console.log("Current version: " + mbc + "." + feat + "." + fix +"\n");
 }
 
-function readType() {
-    let response = prompt('Increase what version? ');
+function readType(direction) {
+    console.log("\nVersion types: (M)ajor breaking change, (F)eature, and (B)ug fix");
+
+    let dirrectionString = '';
+
+    if (direction === 'i') {
+        dirrectionString = "Increase";
+    } else if (direction === 'd') {
+        dirrectionString = "Decrease";
+    } else {
+        throw new Error("Invalid dirrection given");
+    }
+
+    let response = prompt(dirrectionString + ' what version? ');
 
     // if (response.toLowerCase() !== 'm' || response.toLowerCase() !== 'f' || response.toLowerCase() !== 'b') {
     //     console.log("That's not a valid response, try again.")
@@ -22,36 +34,57 @@ function readType() {
    return response;
 }
 
-function updateVersion() {
-    let type = readType();
+function updateVersion(direction) {
+    let type = readType(direction);
+
+    let dirrectionVal = 0;
+
+    if (direction === 'i') {
+        dirrectionVal = 1;
+    } else if (dirrectionVal === 'd') {
+        dirrectionString = -1;
+    } else {
+        throw new Error("Invalid dirrection given");
+    } 
 
     switch (type) {
         case 'm':
-            mbc += 1;
+            mbc += dirrectionVal;
             feat = 0;
             fix = 0;
             break;
         case 'f':
-            feat += 1;
+            feat += dirrectionVal;
             fix = 0;
             break;
         case 'b':
-            fix += 1;
+            fix += dirrectionVal;
             break;
         default:
             throw new Error("Invalid type");
     }
 }
 
+function setIncOrDec() {
+    let response = prompt('Do you want to (i)ncrease or (d)ecrease the version? ');
+
+    while (response.toLowerCase() !== 'i' && response.toLowerCase() !== 'd') {
+        response = prompt("That's not a valid response, try again. ");
+    }
+
+   return response;
+}
+
 function main() {
     outputVersion();
 
-    console.log("\nVersion types: (M)ajor breaking change, (F)eature, and (B)ug fix");
+    let direction = setIncOrDec();
 
-    updateVersion();
+    updateVersion(direction);
+
+    console.log("\n----------------------------\n");
 }
 
 while(true) {
     main();
 }
-
