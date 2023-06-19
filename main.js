@@ -21,7 +21,7 @@ function readType(direction) {
         throw new Error("Invalid dirrection given");
     }
 
-    let response = prompt(dirrectionString + ' what version? ');
+    let response = prompt(dirrectionString + " what version? ");
 
     // if (response.toLowerCase() !== 'm' || response.toLowerCase() !== 'f' || response.toLowerCase() !== 'b') {
     //     console.log("That's not a valid response, try again.")
@@ -35,11 +35,7 @@ function readType(direction) {
 }
 
 function updateVersion(direction) {
-    console.log("Dirrection: " + direction);
-
     let type = readType(direction);
-
-    console.log("Dirrection: " + direction);
 
     let dirrectionVal = 0;
 
@@ -70,7 +66,14 @@ function updateVersion(direction) {
 }
 
 function setIncOrDec() {
-    let response = prompt('Do you want to (i)ncrease or (d)ecrease the version? ');
+    if (mbc == 0 && feat == 0 && fix == 0) {
+        console.log("Do you want to (i)ncrease or (d)ecrease the version? ");
+        console.log("All versions are currently at 0, defaulting to increase.\n");
+
+        return 'i';
+    }
+
+    let response = prompt("Do you want to (i)ncrease or (d)ecrease the version? ");
 
     while (response.toLowerCase() !== 'i' && response.toLowerCase() !== 'd') {
         response = prompt("That's not a valid response, try again. ");
@@ -83,8 +86,6 @@ function main() {
     outputVersion();
 
     let direction = setIncOrDec();
-
-    console.log("Dirrection: " + direction);
 
     updateVersion(direction);
 
