@@ -35,14 +35,18 @@ function readType(direction) {
 }
 
 function updateVersion(direction) {
+    console.log("Dirrection: " + direction);
+
     let type = readType(direction);
+
+    console.log("Dirrection: " + direction);
 
     let dirrectionVal = 0;
 
     if (direction === 'i') {
         dirrectionVal = 1;
-    } else if (dirrectionVal === 'd') {
-        dirrectionString = -1;
+    } else if (direction === 'd') {
+        dirrectionVal = -1;
     } else {
         throw new Error("Invalid dirrection given");
     } 
@@ -79,6 +83,8 @@ function main() {
     outputVersion();
 
     let direction = setIncOrDec();
+
+    console.log("Dirrection: " + direction);
 
     updateVersion(direction);
 
