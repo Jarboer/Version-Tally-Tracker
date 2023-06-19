@@ -49,15 +49,27 @@ function updateVersion(direction) {
 
     switch (type) {
         case 'm':
+            if (!validChange(direction, mbc)) {
+                break;
+            }
+
             mbc += dirrectionVal;
             feat = 0;
             fix = 0;
             break;
         case 'f':
+            if (!validChange(direction, feat)) {
+                break;
+            }
+
             feat += dirrectionVal;
             fix = 0;
             break;
         case 'b':
+            if (!validChange(direction, fix)) {
+                break;
+            }
+
             fix += dirrectionVal;
             break;
         default:
@@ -65,15 +77,24 @@ function updateVersion(direction) {
     }
 }
 
+function validChange(direction, value) {
+    if (direction === 'd' && value <= 0) {
+        console.log("Error: Decreasing this version would make it negative which isn't allowed. Try again.");
+        return false;
+    } 
+    
+    return true;
+}
+
 function setIncOrDec() {
     if (mbc == 0 && feat == 0 && fix == 0) {
-        console.log("Do you want to (i)ncrease or (d)ecrease the version? ");
+        console.log("Do you want to (i)ncrease or (d)ecrease a version? ");
         console.log("All versions are currently at 0, defaulting to increase.\n");
 
         return 'i';
     }
 
-    let response = prompt("Do you want to (i)ncrease or (d)ecrease the version? ");
+    let response = prompt("Do you want to (i)ncrease or (d)ecrease a version? ");
 
     while (response.toLowerCase() !== 'i' && response.toLowerCase() !== 'd') {
         response = prompt("That's not a valid response, try again. ");
