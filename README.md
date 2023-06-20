@@ -1,5 +1,5 @@
 # Version-Tally-Tracker
-This command line Node.js program is designed to make it easy to track program versions using a tally like input system.
+This command line Node.js program is designed to make it easy to track program versions using a tally like input system. This was mostly a fun little side project to practice using Node.js and also an excuse to program (manually tracking the version would have way quicker than programming this and making it feature rich haha).
 
 ## How to Run the Program
 
