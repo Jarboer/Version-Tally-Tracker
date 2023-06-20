@@ -157,15 +157,26 @@ class Tracker {
     /**
      * Prompts the user to choose whether to increase or decrease a version
      * 
-     * @returns {string} - Returns the selected direction: 'i' for increase, 'd' for decrease
+     * @param {boolean} silent - If the method should be run silently (true) which skips prompting the user, 
+     * or not silently (false) which prompts the user for the direction
+     * @returns {string} - Returns the selected direction: 'i' for increase, 'd' for decrease, '' when run silently and not all versions are 0
      */
-    setIncOrDec() {
+    setIncOrDec(silent) {
         // Check if all versions are currently at 0
         if (this.mbc === 0 && this.feat === 0 && this.fix === 0) {
-            console.log("Do you want to (i)ncrease or (d)ecrease a version?");
+            // If the method wasn't called silently then display the prompt
+            if (!silent) {
+                console.log("Do you want to (i)ncrease or (d)ecrease a version?");
+            }
             console.log("All versions are currently at 0, defaulting to increase.");
 
             return 'i'; // Default to increase ('i') when all versions are at 0
+        }
+
+        // If the method was called silently then skip prompting the user 
+        // and return with nothing
+        if (silent) {
+            return '';
         }
 
         // Prompt the user for the direction

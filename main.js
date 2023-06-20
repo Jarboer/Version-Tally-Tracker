@@ -24,7 +24,7 @@ while (true) {
     }
 
     // Prompt the user to choose whether to increase or decrease the version counters
-    direction = tracker.setIncOrDec();
+    direction = tracker.setIncOrDec(false);
 
     // Default to true to prevent an infinite loop until user decides to exit
     continueLoop = true;
@@ -34,6 +34,13 @@ while (true) {
         // Ask the user which version counter to update and determine if they want 
         // to continue in the same direction.
         continueLoop = tracker.updateVersion(direction);
+
+        // Check silently whether or not the dirrection should be changed to increase (if all versions are 0)
+        let tempDirection = tracker.setIncOrDec(true);
+        // If the tempDirection is not an empty string then update the direction
+        if (tempDirection != '') {
+            direction = tempDirection;
+        }
 
         console.log("\n----------------------------\n");
 
