@@ -1,5 +1,5 @@
 // Import process - Used to access the exit the program method
-require('process');
+import('process');
 
 // Import and expose prompt's methods
 const prompt = require('prompt-sync')();
@@ -135,7 +135,6 @@ class Tracker {
         }
     }
 
-
     /**
      * Checks if a change in a version is valid based on the specified direction and current value
      * 
@@ -146,13 +145,12 @@ class Tracker {
     validChange(direction, value) {
         // Determine if the change is valid
         if (direction === 'd' && value <= 0) {
-            console.log("Error: Decreasing this version would make it negative, which isn't allowed. Try again.");
+            console.log("\nError: Decreasing this version would make it negative, which isn't allowed. Try again.");
             return false;
         }
         
         return true; // Valid change
     }
-
 
     /**
      * Prompts the user to choose whether to increase or decrease a version
@@ -168,7 +166,7 @@ class Tracker {
             if (!silent) {
                 console.log("Do you want to (i)ncrease or (d)ecrease a version?");
             }
-            console.log("All versions are currently at 0, defaulting to increase.");
+            console.log("\nInfo: All versions are currently at 0, defaulting to increase.");
 
             return 'i'; // Default to increase ('i') when all versions are at 0
         }
@@ -192,7 +190,6 @@ class Tracker {
 
         return response; // Return the selected direction ('i' or 'd')
     }
-
 
     /**
      * Checks if the program should close and exits gracefully if ctrl + c was pressed
