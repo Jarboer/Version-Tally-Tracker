@@ -28,54 +28,49 @@ class Tracker {
     }
 
     /**
-     * Prompts the user to choose a version type (Major breaking change, Feature, or Bug fix)
+     * Prompts the user to enter a command to update a version's count (Major breaking change, Feature, or Bug fix) or switch directions
      * 
-     * @param {string} direction - The selected direction: 'i' for increase, 'd' for decrease
-     * @returns {string} - Returns the selected version type: 'm' for Major breaking change, 'f' for Feature, 'b' for Bug fix, or 'e' to change the direction
+     * @param {string} direction - The current direction: 'i' for increase, 'd' for decrease
+     * @returns {string} - Returns the selected command: 'm' for Major breaking change, 'f' for Feature, 'b' for Bug fix, or 's' to switch the direction
      * @throws {Error} - Thrown if an invalid direction is given
      */
-    readType(direction) {
-        // Display available version types and instructions to change direction
-        console.log("\nVersion types: (M)ajor breaking change, (F)eature, and (B)ug fix.");
-        console.log("Enter 'e' to change direction.");
+    getCommand(direction) {
+        // Display the versions and instructions to switch directions
+        console.log("Versions: (M)ajor breaking change, (F)eature, and (B)ug fix.");
+        console.log("Enter 's' to switch directions.\n");
 
-        // Used to store the full direction string
-        let directionString = '';
-
-        // Convert the single character direction to a full string direction
-        if (direction === 'i') { // If the increase direction was given then set the string to it
-            directionString = "Increase";
-        } else if (direction === 'd') { // Otherwise, if the decrease direction was given then set the string to it
-            directionString = "Decrease";
+        // Determine the current mode
+        if (direction === 'i') { // If the increase direction was given then output increase mode
+            console.log("Current mode: Increase\n");
+        } else if (direction === 'd') { // Otherwise, if the decrease direction was given then output decrease mode
+            console.log("Current mode: Decrease\n");
         } else { // Otherwise, throw an error if an invalid direction is given
             throw new Error("Invalid direction given.");
         }
 
-        // Prompt the user for the version to update
-        let response = prompt(directionString + " what version? ");
+        // Prompt the user to enter thier command
+        let command = prompt("Enter your command: ");
 
-        this.handleProgramClosure(response); // Check for program closure
+        this.handleProgramClosure(command); // Check for program closure
 
-        // Validate user's response until it is 'm', 'f', 'b', or 'e'
-        while (response.toLowerCase() !== 'm' && response.toLowerCase() !== 'f' && response.toLowerCase() !== 'b' && response.toLowerCase() !== 'e') {
-            // Prompt the user for the version to update
-            response = prompt("That's not a valid response, try again. ");
+        // Validate user's response until it is 'm', 'f', 'b', or 's'
+        while (command.toLowerCase() !== 'm' && command.toLowerCase() !== 'f' && command.toLowerCase() !== 'b' && command.toLowerCase() !== 's') {
+            // Prompt the user to enter a valid command
+            command = prompt("That's not a valid command, try again: ");
         }
 
-        return response; // Return the selected version type
+        return command; // Return the selected command
     }
 
    /**
      * Updates the version counters based on the specified direction
      * 
      * @param {string} direction - The selected direction: 'i' for increase, 'd' for decrease
-     * @returns {boolean} - Returns true if the function completed successfully, otherwise, it returns false if the user wants to change the direction
+     * @param {string} selectedVersion - The selected version to update the count of: 'm' for Major breaking change, 'f' for Feature, or 'b' for Bug fix
+     * @returns {boolean} - Returns true if the function completed successfully, otherwise, it returns false if the user wants to switch the direction
      * @throws {Error} - Thrown if an invalid direction or type is given
      */
-    updateVersion(direction) {
-        // Prompt the user to choose a version type and store it
-        let type = this.readType(direction);
-
+    updateVersion(direction, selectedVersion) {
         let directionVal = 0; // Used to store the value by which the version counters will be updated
 
         // Determine the corresponding value for the direction
@@ -88,10 +83,10 @@ class Tracker {
         }
 
         // Update the version counters based on the selected type
-        switch (type) {
+        switch (selectedVersion) {
             case 'm': // Update the Major breaking change counter and set the rest to 0
-                // If the change was invalid then return the method early
-                if (!this.validChange(direction, this.mbc)) {
+                // If the version change was invalid then return the method early
+                if (!this.validVerChange(direction, this.mbc)) {
                     // The user wants to stick with the direction
                     return true;
                 }
@@ -104,8 +99,8 @@ class Tracker {
                 // A version was updated successfully
                 return true;
             case 'f': // Update the Feature counter and set the Bug fix counter to 0
-                // If the change was invalid then return the method early
-                if (!this.validChange(direction, this.feat)) {
+                // If the version change was invalid then return the method early
+                if (!this.validVerChange(direction, this.feat)) {
                     // The user wants to stick with the direction
                     return true;
                 }
@@ -117,8 +112,8 @@ class Tracker {
                 // A version was updated successfully
                 return true;
             case 'b':  // Update the Bug fix counter
-                // If the change was invalid then return the method early
-                if (!this.validChange(direction, this.fix)) {
+                // If the version change was invalid then return the method early
+                if (!this.validVerChange(direction, this.fix)) {
                     // The user wants to stick with the direction
                     return true;
                 }
@@ -128,8 +123,6 @@ class Tracker {
 
                 // The user wants to stick with the direction
                 return true;
-            case 'e': // The user wants to change the direction
-                return false; 
             default: // Throw an error if an invalid type is given
                 throw new Error("Invalid type given."); 
         }
@@ -142,8 +135,8 @@ class Tracker {
      * @param {number} value - The current value of the version being changed
      * @returns {boolean} - Returns true if the change is valid, otherwise, it returns false
      */
-    validChange(direction, value) {
-        // Determine if the change is valid
+    validVerChange(direction, value) {
+        // If the change is invalid then display an error and return false
         if (direction === 'd' && value <= 0) {
             console.log("\nError: Decreasing this version would make it negative, which isn't allowed. Try again.");
             return false;
@@ -153,42 +146,37 @@ class Tracker {
     }
 
     /**
-     * Prompts the user to choose whether to increase or decrease a version
+     * Sets whether the direction should be increasing or decreasing
      * 
-     * @param {boolean} silent - If the method should be run silently (true) which skips prompting the user, 
-     * or not silently (false) which prompts the user for the direction
-     * @returns {string} - Returns the selected direction: 'i' for increase, 'd' for decrease, '' when run silently and not all versions are 0
+     * @param {string} direction - The current direction, either 'i' for increase or 'd' for decrease
+     * @param {boolean} silent - Flag to determine if the method should run silently
+     * @param {boolean} check - Flag to determine if the method should only check if all versions are currently at 0
+     * @returns {string} Returns the selected direction ('i' for increase or 'd' for decrease)
+     * @throws {Error} Thrown if an invalid direction is given
      */
-    setIncOrDec(silent) {
-        // Check if all versions are currently at 0
+    setIncOrDec(direction, silent, check) {
+        // If all versions are currently at 0 then inform the user (if not run silent) and default to the increase direction
         if (this.mbc === 0 && this.feat === 0 && this.fix === 0) {
-            // If the method wasn't called silently then display the prompt
+            // If the method is not being run silent then inform the user
             if (!silent) {
-                console.log("Do you want to (i)ncrease or (d)ecrease a version?");
+                console.log("\nInfo: All versions are currently at 0, defaulting to increase.");
             }
-            console.log("\nInfo: All versions are currently at 0, defaulting to increase.");
 
-            return 'i'; // Default to increase ('i') when all versions are at 0
+            return 'i';
+        } else if (check) { // Otherwise, if the method is being run in check mode then return the current (unchanged) direction
+            return direction;
         }
 
-        // If the method was called silently then skip prompting the user 
-        // and return with nothing
-        if (silent) {
-            return '';
+        // Swap the direction
+        if (direction === 'i') { // If the increase direction was given then switch to decrease
+            direction = 'd';
+        } else if (direction === 'd') { // Otherwise, if the decrease direction was given then switch to increase
+            direction = 'i';
+        } else { // Otherwise, throw an error if an invalid direction is given
+            throw new Error("Invalid direction given.");
         }
 
-        // Prompt the user for the direction
-        let response = prompt("Do you want to (i)ncrease or (d)ecrease a version? ");
-
-        this.handleProgramClosure(response); // Check for program closure
-
-        // Validate the user's response until it is 'i' or 'd'
-        while (response.toLowerCase() !== 'i' && response.toLowerCase() !== 'd') {
-            // Prompt the user for the direction
-            response = prompt("That's not a valid response, try again. ");
-        }
-
-        return response; // Return the selected direction ('i' or 'd')
+        return direction; // Return the selected direction ('i' or 'd')
     }
 
     /**
